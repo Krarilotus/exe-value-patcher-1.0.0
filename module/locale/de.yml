@@ -2,3 +2,4 @@ config_file: Datei mit Wertänderungen
 config_file_tooltip: YAML-Datei mit Crusader- und Extreme-Werten für den Spielstart wählen.
 config_group: Programmwerte
 misc: Miscellaneous
+tags.tools: Werkzeuge

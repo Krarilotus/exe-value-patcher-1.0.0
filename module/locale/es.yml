@@ -2,3 +2,4 @@ config_file: Archivo de configuración de valores
 config_file_tooltip: Elige un archivo YAML con valores de Crusader y Extreme para aplicar al inicio.
 config_group: Valores del programa
 misc: Miscellaneous
+tags.tools: Herramientas

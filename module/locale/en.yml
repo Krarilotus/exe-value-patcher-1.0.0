@@ -2,3 +2,4 @@ config_file: Value configuration file
 config_file_tooltip: Choose a YAML file containing the Crusader and Extreme values to apply at startup.
 config_group: Executable values
 misc: Miscellaneous
+tags.tools: Tools

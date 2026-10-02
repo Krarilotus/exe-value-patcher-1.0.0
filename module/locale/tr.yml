@@ -2,3 +2,4 @@ config_file: Değer ayar dosyası
 config_file_tooltip: Başlangıçta uygulanacak Crusader ve Extreme değerlerini içeren YAML dosyasını seçin.
 config_group: Program değerleri
 misc: Miscellaneous
+tags.tools: Araçlar

@@ -2,3 +2,4 @@ config_file: فایل تنظیم مقادیر
 config_file_tooltip: فایل YAML مقادیر Crusader و Extreme را برای اعمال هنگام شروع انتخاب کنید.
 config_group: مقادیر برنامه
 misc: Miscellaneous
+tags.tools: ابزارها

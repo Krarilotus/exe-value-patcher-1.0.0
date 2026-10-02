@@ -2,3 +2,4 @@ config_file: 数值配置文件
 config_file_tooltip: 选择包含启动时应用的 Crusader 和 Extreme 数值的 YAML 文件。
 config_group: 程序数值
 misc: Miscellaneous
+tags.tools: 工具
