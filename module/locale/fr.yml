@@ -1,0 +1,4 @@
+config_file: Fichier de configuration des valeurs
+config_file_tooltip: Choisissez un fichier YAML de valeurs Crusader et Extreme à appliquer au démarrage.
+config_group: Valeurs du programme
+misc: Miscellaneous

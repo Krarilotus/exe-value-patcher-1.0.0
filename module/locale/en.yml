@@ -1,4 +1,4 @@
-config_group: Exe Value Patcher
-config_group_descr: Writes values from a config file into the game at startup, for both Stronghold Crusader and Stronghold Crusader Extreme.
-config_file: Config file
-config_file_tooltip: YAML file with an "extreme" and a "vanilla" list of values to write. Defaults to the config.yml that ships with this module.
+config_file: Value configuration file
+config_file_tooltip: Choose a YAML file containing the Crusader and Extreme values to apply at startup.
+config_group: Executable values
+misc: Miscellaneous

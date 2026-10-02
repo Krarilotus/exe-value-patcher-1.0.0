@@ -2,9 +2,9 @@ meta:
   version: 1.0.0
 options:
 - display: GroupBox
-  category: [Exe Value Patcher]
+  category:
+  - '{{misc}}'
   header: '{{config_group}}'
-  text: '{{config_group_descr}}'
   hasHeader: true
   children:
   - url: exe-value-patcher.config_file
@@ -16,4 +16,4 @@ options:
       type: string
       generalizeExtensionPaths: true
       filter: files
-      value: 'ucp/modules/exe-value-patcher-*/config.yml'
+      value: ucp/modules/exe-value-patcher-*/values.yml

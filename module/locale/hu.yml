@@ -1,0 +1,4 @@
+config_file: Értékbeállítási fájl
+config_file_tooltip: Válassz YAML-fájlt a Crusader és Extreme induláskor alkalmazott értékeivel.
+config_group: Programértékek
+misc: Miscellaneous

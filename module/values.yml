@@ -1,0 +1,1055 @@
+# Exe Value Patcher configuration
+#
+# The module writes every entry of the section that matches the running game and ignores
+# the other one:
+#   extreme:  Stronghold_Crusader_Extreme.exe
+#   vanilla:  Stronghold Crusader.exe
+# Both sections list the same values under the same names; only the addresses differ.
+#
+# Entry fields
+#   name:         only used in the log
+#   description:  free text
+#   address:      memory address (hex). An address below 0x400000 is read as a file offset,
+#                 the format Balanceprog uses, and 0x400000 is added to it.
+#   size:         1, 2 or 4 bytes
+#   value:        what to write. Negative numbers are fine, and so is Balanceprog's unsigned
+#                 form (241 is the same byte as -15, 4294967099 the same as -197).
+#   default:      the value in the unmodified game. Optional. When the exe holds something
+#                 else, the log gets a warning (wrong address, or the exe was already patched).
+#
+# Things worth knowing
+#   * 1-byte values are sign-extended by the game, so keep them between -128 and 127.
+#   * Ranges around units are in tiles and measured as a circle.
+#   * "1-player game modes" means campaign missions and custom scenarios. Skirmish, the
+#     Crusader trail and multiplayer all use the other value of each pair.
+#   * To leave a value alone, delete its entry or comment it out with #.
+
+# true: skip entries whose default does not match what is in the exe.
+# false: write them anyway and only warn.
+skip_mismatched: false
+
+extreme:
+
+  # --------------------------------------------------------------------------------------
+  # Building overlay sprite offsets
+  # Pixel offsets of the anim_castle.gm1 overlays (gm 0x36) the game draws on towers, the
+  # keep and the gatehouses (ViewportRenderState::renderGmOverlayBuilding). Each building
+  # draws up to 4 of them, numbered here in the order the game draws them. Signed; every
+  # x offset and some y offsets are 1 byte (-128..127).
+  # --------------------------------------------------------------------------------------
+  - name: offset_tower1_x
+    description: "X offset of overlay 1 of tower two (BuildingType 75)."
+    address: 0x4E565F
+    size: 1
+    default: -48
+    value: -54
+  - name: offset_tower1_y
+    description: "Y offset of overlay 1 of tower two (BuildingType 75)."
+    address: 0x4E5658
+    size: 4
+    default: -194
+    value: -197
+  - name: offset_tower2_x
+    description: "X offset of overlay 1 of tower four (BuildingType 77)."
+    address: 0x4E5741
+    size: 1
+    default: -77
+    value: -121
+  - name: offset_tower2_y
+    description: "Y offset of overlay 1 of tower four (BuildingType 77)."
+    address: 0x4E573A
+    size: 4
+    default: -246
+    value: -389
+  - name: offset_tower3_x
+    description: "X offset of overlay 1 of tower five (BuildingType 78)."
+    address: 0x4E57F6
+    size: 1
+    default: -76
+    value: -105
+  - name: offset_tower3_y
+    description: "Y offset of overlay 1 of tower five (BuildingType 78)."
+    address: 0x4E57EF
+    size: 4
+    default: -260
+    value: -277
+  - name: offset_tower4_x
+    description: "X offset of overlay 1 of tower three (BuildingType 76)."
+    address: 0x4E56D0
+    size: 1
+    default: -63
+    value: -63
+  - name: offset_tower4_y
+    description: "Y offset of overlay 1 of tower three (BuildingType 76)."
+    address: 0x4E56C9
+    size: 4
+    default: -225
+    value: -305
+  - name: offset_keep_x
+    description: "X offset of overlay 1 of the stone keep (BuildingType 41)."
+    address: 0x4E536A
+    size: 1
+    default: -96
+    value: -112
+  - name: offset_keep_y
+    description: "Y offset of overlay 1 of the stone keep (BuildingType 41)."
+    address: 0x4E5363
+    size: 4
+    default: -143
+    value: -301
+  - name: offset_closed_tower4_x
+    description: "X offset of overlay 4 of tower four (BuildingType 77)."
+    address: 0x4E57A7
+    size: 1
+    default: -77
+    value: -121
+  - name: offset_closed_tower4_y
+    description: "Y offset of overlay 4 of tower four (BuildingType 77)."
+    address: 0x4E57A0
+    size: 4
+    default: -315
+    value: -389
+  - name: offset_closed_tower0_x
+    description: "X offset of overlay 2 of tower one (BuildingType 74)."
+    address: 0x4E5636
+    size: 1
+    default: -34
+    value: -42
+  - name: offset_closed_tower0_y
+    description: "Y offset of overlay 2 of tower one (BuildingType 74)."
+    address: 0x4E562F
+    size: 4
+    default: -379
+    value: -468
+  - name: offset_tower0_x
+    description: "X offset of overlay 1 of tower one (BuildingType 74)."
+    address: 0x4E5610
+    size: 1
+    default: -33
+    value: -32
+  - name: offset_tower0_y
+    description: "Y offset of overlay 1 of tower one (BuildingType 74)."
+    address: 0x4E5609
+    size: 4
+    default: -320
+    value: -348
+  - name: offset_biggate_door_Left_x
+    description: "X offset of overlay 1 of the large gatehouse (BuildingType 45)."
+    address: 0x4E53B7
+    size: 1
+    default: -7
+    value: -92
+  - name: offset_biggate_door_Left_y
+    description: "Y offset of overlay 1 of the large gatehouse (BuildingType 45)."
+    address: 0x4E53B0
+    size: 4
+    default: -193
+    value: -243
+  - name: offset_biggate_door_right_x
+    description: "X offset of overlay 2 of the large gatehouse (BuildingType 45)."
+    address: 0x4E53D9
+    size: 1
+    default: -96
+    value: -92
+  - name: offset_biggate_door_right_y
+    description: "Y offset of overlay 2 of the large gatehouse (BuildingType 45)."
+    address: 0x4E53D2
+    size: 4
+    default: -193
+    value: -243
+  - name: offset_biggate_overlay3_x
+    description: "X offset of overlay 3 of the large gatehouse (BuildingType 45)."
+    address: 0x4E53F8
+    size: 1
+    default: 3
+    value: 3
+  - name: offset_biggate_overlay3_y
+    description: "Y offset of overlay 3 of the large gatehouse (BuildingType 45)."
+    address: 0x4E53F4
+    size: 1
+    default: -91
+    value: -91
+  - name: offset_biggate_overlay4_x
+    description: "X offset of overlay 4 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5417
+    size: 1
+    default: -51
+    value: -51
+  - name: offset_biggate_overlay4_y
+    description: "Y offset of overlay 4 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5413
+    size: 1
+    default: -91
+    value: -91
+  - name: offset_smallgate_overlay1_x
+    description: "X offset of overlay 1 of the small gatehouse (BuildingType 46)."
+    address: 0x4E547C
+    size: 1
+    default: 5
+    value: 5
+  - name: offset_smallgate_overlay1_y
+    description: "Y offset of overlay 1 of the small gatehouse (BuildingType 46)."
+    address: 0x4E5475
+    size: 4
+    default: -178
+    value: -178
+  - name: offset_smallgate_overlay2_x
+    description: "X offset of overlay 2 of the small gatehouse (BuildingType 46)."
+    address: 0x4E549E
+    size: 1
+    default: -64
+    value: -64
+  - name: offset_smallgate_overlay2_y
+    description: "Y offset of overlay 2 of the small gatehouse (BuildingType 46)."
+    address: 0x4E5497
+    size: 4
+    default: -177
+    value: -177
+  - name: offset_smallgate_overlay3_x
+    description: "X offset of overlay 3 of the small gatehouse (BuildingType 46)."
+    address: 0x4E54BD
+    size: 1
+    default: -13
+    value: -13
+  - name: offset_smallgate_overlay3_y
+    description: "Y offset of overlay 3 of the small gatehouse (BuildingType 46)."
+    address: 0x4E54B9
+    size: 1
+    default: -83
+    value: -83
+  - name: offset_smallgate_overlay4_x
+    description: "X offset of overlay 4 of the small gatehouse (BuildingType 46)."
+    address: 0x4E54DC
+    size: 1
+    default: -35
+    value: -35
+  - name: offset_smallgate_overlay4_y
+    description: "Y offset of overlay 4 of the small gatehouse (BuildingType 46)."
+    address: 0x4E54D8
+    size: 1
+    default: -83
+    value: -83
+
+  # --------------------------------------------------------------------------------------
+  # Diagonal wall overlays
+  # Where a wall runs diagonally, the game fills the corners between its tiles with one of
+  # four anim_castle.gm1 frames, 46 to 49 as the game counts them (45 to 48 counting from 0).
+  # Which frame a tile gets depends on the direction of the diagonal and on the camera
+  # rotation. ViewportRenderState::renderMap draws them with the fixed offsets below; the
+  # other axis of each has no offset in the code, so it cannot be changed with a value.
+  # Each offset applies to every tile carrying that overlay, not to a single frame.
+  # --------------------------------------------------------------------------------------
+  - name: offset_wall_diagonal_frame46_y
+    description: "Y offset of the diagonal wall overlay using frame 46 (tile flag 0x200)."
+    address: 0x4EA1B1
+    size: 1
+    default: -1
+    value: -1
+  - name: offset_wall_diagonal_frame47_y
+    description: "Y offset of the diagonal wall overlay using frame 47 (tile flag 0x40)."
+    address: 0x4EA123
+    size: 1
+    default: 7
+    value: 7
+  - name: offset_wall_diagonal_frame48_x
+    description: "X offset of the diagonal wall overlay using frame 48 (tile flag 0x100)."
+    address: 0x4EA19A
+    size: 1
+    default: 16
+    value: 16
+  - name: offset_wall_diagonal_frame49_y
+    description: "Y offset of the diagonal wall overlay using frame 49 (tile flag 0x80). A second pass gives neighbouring tiles on the same diagonal other frames through the same flag, so this moves those pieces too."
+    address: 0x4EA16B
+    size: 1
+    default: 98
+    value: 98
+
+  # --------------------------------------------------------------------------------------
+  # Misc
+  # --------------------------------------------------------------------------------------
+  - name: minimap_unit_size
+    description: "Minimap unit size."
+    address: 0x4B6FC0
+    size: 1
+    default: 1
+    value: 1
+  - name: increase_memory
+    description: "Size in bytes of the texture rendering buffer the game allocates at startup."
+    address: 0x59CDD8
+    size: 4
+    default: 68100000
+    value: 100000000
+
+  # --------------------------------------------------------------------------------------
+  # Unit stances
+  # --------------------------------------------------------------------------------------
+  - name: defensive_stance_range
+    description: "Defensive stance range * 8."
+    address: 0x54ACA7
+    size: 4
+    default: 40
+    value: 80
+  - name: aggressive_stance_range
+    description: "Aggressive stance range * 8."
+    address: 0x54AC9D
+    size: 4
+    default: 200
+    value: 100
+  - name: aggressive_stance_melee_building_target_range
+    description: "Aggressive stance melee units building targeting range."
+    address: 0x52B064
+    size: 1
+    default: 15
+    value: 35
+  - name: stance_max_units_per_enemy
+    description: "Max. number of defensive/aggressive stance units allowed to go after the same enemy."
+    address: 0x54B044
+    size: 2
+    default: 3
+    value: 5
+
+  # --------------------------------------------------------------------------------------
+  # Castle build range
+  # How far from the keep castle parts may be built.
+  # --------------------------------------------------------------------------------------
+  - name: build_range_160
+    description: "160x160 map build range."
+    address: 0x4FBFD2
+    size: 4
+    default: 45
+    value: 70
+  - name: build_range_200
+    description: "200x200 map build range."
+    address: 0x4FBFD8
+    size: 4
+    default: 50
+    value: 70
+  - name: build_range_300
+    description: "300x300 map build range."
+    address: 0x4FBFDE
+    size: 4
+    default: 60
+    value: 70
+  - name: build_range_400
+    description: "400x400 map build range. Also used for any other map size."
+    address: 0x4FBFE4
+    size: 4
+    default: 70
+    value: 70
+
+  # --------------------------------------------------------------------------------------
+  # Building denial - player AND AI
+  # The AI places all of its buildings, farms and siege tents through these same checks
+  # (TileMapState::placeBuilding -> checkBuildingCanBePlacedHere / setTerrain), so these are
+  # the AI build denial ranges as well as the player's. The game has no separate AI copy.
+  # --------------------------------------------------------------------------------------
+  - name: denial_units_normal_buildings
+    description: "[player + AI] Range around enemy units for ordinary buildings (houses, workshops, barracks, market, church, keep and the like) in 1-player game modes. Other game modes use this value plus the offset below. Was: Building denial range around units, offset dependant."
+    address: 0x504021
+    size: 1
+    default: 30
+    value: 30
+  - name: denial_units_normal_buildings_offset_multiplayer
+    description: "[player + AI] Added to the value above in skirmish, Crusader trail and multiplayer: 30 + (-15) = 15. Was: Building denial range around units, offset for non-1-player gamemodes."
+    address: 0x50401E
+    size: 1
+    default: -15
+    value: -15
+  - name: denial_units_castle_parts
+    description: "[player + AI] Range around enemy units for towers, gatehouses, gates, moat, killing pits, pitch ditches, drawbridges and dog cages, outside 1-player game modes. Was: Building denial range around units 3."
+    address: 0x503DD2
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_castle_parts
+    description: "[player + AI] Range around enemy buildings for the same castle parts, outside 1-player game modes. Was: Building denial range around buildings 3."
+    address: 0x503DDA
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_castle_parts_1player
+    description: "[player + AI] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 3."
+    address: 0x503DE1
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_units_storage
+    description: "[player + AI] Range around enemy units for stockpile, granary and armoury, outside 1-player game modes (1-player modes do not check). Was: Building denial range around units for storage buildings in non-1-player gamemodes."
+    address: 0x503D30
+    size: 1
+    default: 3
+    value: 15
+  - name: denial_units_siege_engines
+    description: "[player + AI] Range around enemy units for siege tents (catapult, trebuchet, siege tower, ram, shield). Was: Building denial range around units for siege tents."
+    address: 0x503FD1
+    size: 1
+    default: 3
+    value: 7
+  - name: denial_units_farms_keep
+    description: "[player + AI] Range around enemy units when farms, the keep and killing pits lay down their ground, outside 1-player game modes. Was: Building denial range around units 5."
+    address: 0x512CF1
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_farms_keep
+    description: "[player + AI] Range around enemy buildings for the same, outside 1-player game modes. Was: Building denial range around buildings 5."
+    address: 0x512CF8
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_farms_keep_1player
+    description: "[player + AI] Range around enemy units for the same, in 1-player game modes. Was: Building denial range around units in 1-player gamemodes."
+    address: 0x512D01
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_buildings_farms_keep_1player
+    description: "[player + AI] Range around enemy buildings for the same, in 1-player game modes. Was: Building denial range around buildings in 1-player gamemodes."
+    address: 0x512D08
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_buildings_castle_parts_map_editor
+    description: "[map editor] Range around enemy buildings for castle parts in the map editor. Was: Building denial range around buildings, scenario editor 2."
+    address: 0x503F54
+    size: 1
+    default: 7
+    value: 7
+
+  # --------------------------------------------------------------------------------------
+  # Building denial - AI only
+  # The only AI-exclusive build denial range: the AI builds walls tile by tile through
+  # TileMapState::placeDefensiveStructureTile, which the player never uses.
+  # --------------------------------------------------------------------------------------
+  - name: ai_denial_units_walls
+    description: "[AI only] Range around enemy units in which the AI cannot place wall, crenel and stair tiles. Same value in every game mode. Was: Building denial range around units, unknown special case."
+    address: 0x4F988B
+    size: 1
+    default: 5
+    value: 7
+
+  # --------------------------------------------------------------------------------------
+  # Building denial - player only
+  # Build cursor checks, walls the player drags, the delete tool and the repair button.
+  # --------------------------------------------------------------------------------------
+  - name: denial_units_castle_site
+    description: "[player] Range around enemy units, castle site check of the build cursor, outside 1-player game modes. Was: Building denial range around units 1."
+    address: 0x5028AC
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_castle_site
+    description: "[player] Range around enemy buildings for the same. Was: Building denial range around buildings 1."
+    address: 0x5028B4
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_castle_site_1player
+    description: "[player] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 1."
+    address: 0x5028BB
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_units_player_walls
+    description: "[player] Range around enemy units for walls the player drags, outside 1-player game modes. Was: Building denial range around units 2."
+    address: 0x502D72
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_player_walls
+    description: "[player] Range around enemy buildings for the same. Was: Building denial range around buildings 2."
+    address: 0x502D7A
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_player_walls_1player
+    description: "[player] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 2."
+    address: 0x502D81
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_buildings_player_walls_map_editor
+    description: "[map editor] Range around enemy buildings for walls in the map editor. Was: Building denial range around buildings, scenario editor 1."
+    address: 0x503054
+    size: 1
+    default: 7
+    value: 7
+  - name: denial_units_placement_preview
+    description: "[player] Range around enemy units for the red/green placement preview, outside 1-player game modes. Was: Building denial range around units 4."
+    address: 0x508EBF
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_placement_preview
+    description: "[player] Range around enemy buildings for the same. Was: Building denial range around buildings 4."
+    address: 0x508EC7
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_placement_preview_1player
+    description: "[player] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 4."
+    address: 0x508ECE
+    size: 4
+    default: 30
+    value: 30
+  - name: delete_tool_denial_units
+    description: "[player] Delete tool: range around enemy units in 1-player game modes. Was: Delete tool denial range around units 1."
+    address: 0x438A8E
+    size: 1
+    default: 30
+    value: 30
+  - name: delete_tool_denial_units_offset_multiplayer
+    description: "[player] Delete tool: added to the value above outside 1-player game modes. Was: Delete tool denial range around units, offset for non-1-player gamemodes 1."
+    address: 0x438A8B
+    size: 1
+    default: -15
+    value: -15
+  - name: delete_cursor_denial_units
+    description: "[player] Delete cursor check: range around enemy units in 1-player game modes. Was: Delete tool denial range around units 2."
+    address: 0x504E93
+    size: 1
+    default: 30
+    value: 30
+  - name: delete_cursor_denial_units_offset_multiplayer
+    description: "[player] Delete cursor check: added to the value above outside 1-player game modes. Was: Delete tool denial range around units, offset for non-1-player gamemodes 2."
+    address: 0x504E8B
+    size: 1
+    default: -15
+    value: -15
+  - name: repair_denial_units
+    description: "[player] Tower/gate repair: range around enemy units in 1-player game modes. Was: Tower/gate repair denial range around units 1."
+    address: 0x4663B3
+    size: 1
+    default: 30
+    value: 30
+  - name: repair_denial_units_offset_multiplayer
+    description: "[player] Tower/gate repair: added to the value above outside 1-player game modes. Was: Tower/gate repair denial range around units, offset for non-1-player gamemodes 1."
+    address: 0x4663B0
+    size: 1
+    default: -15
+    value: -15
+  - name: repair_button_denial_units
+    description: "[player] Repair button enabled check: range around enemy units in 1-player game modes. Was: Tower/gate repair denial range around units 2."
+    address: 0x46658E
+    size: 1
+    default: 30
+    value: 30
+  - name: repair_button_denial_units_offset_multiplayer
+    description: "[player] Repair button enabled check: added to the value above outside 1-player game modes. Was: Tower/gate repair denial range around units, offset for non-1-player gamemodes 2."
+    address: 0x46658B
+    size: 1
+    default: -15
+    value: -15
+
+vanilla:
+
+  # --------------------------------------------------------------------------------------
+  # Building overlay sprite offsets
+  # Pixel offsets of the anim_castle.gm1 overlays (gm 0x36) the game draws on towers, the
+  # keep and the gatehouses (ViewportRenderState::renderGmOverlayBuilding). Each building
+  # draws up to 4 of them, numbered here in the order the game draws them. Signed; every
+  # x offset and some y offsets are 1 byte (-128..127).
+  # --------------------------------------------------------------------------------------
+  - name: offset_tower1_x
+    description: "X offset of overlay 1 of tower two (BuildingType 75)."
+    address: 0x4E52CF
+    size: 1
+    default: -48
+    value: -54
+  - name: offset_tower1_y
+    description: "Y offset of overlay 1 of tower two (BuildingType 75)."
+    address: 0x4E52C8
+    size: 4
+    default: -194
+    value: -197
+  - name: offset_tower2_x
+    description: "X offset of overlay 1 of tower four (BuildingType 77)."
+    address: 0x4E53B1
+    size: 1
+    default: -77
+    value: -121
+  - name: offset_tower2_y
+    description: "Y offset of overlay 1 of tower four (BuildingType 77)."
+    address: 0x4E53AA
+    size: 4
+    default: -246
+    value: -389
+  - name: offset_tower3_x
+    description: "X offset of overlay 1 of tower five (BuildingType 78)."
+    address: 0x4E5466
+    size: 1
+    default: -76
+    value: -105
+  - name: offset_tower3_y
+    description: "Y offset of overlay 1 of tower five (BuildingType 78)."
+    address: 0x4E545F
+    size: 4
+    default: -260
+    value: -277
+  - name: offset_tower4_x
+    description: "X offset of overlay 1 of tower three (BuildingType 76)."
+    address: 0x4E5340
+    size: 1
+    default: -63
+    value: -63
+  - name: offset_tower4_y
+    description: "Y offset of overlay 1 of tower three (BuildingType 76)."
+    address: 0x4E5339
+    size: 4
+    default: -225
+    value: -305
+  - name: offset_keep_x
+    description: "X offset of overlay 1 of the stone keep (BuildingType 41)."
+    address: 0x4E4FDA
+    size: 1
+    default: -96
+    value: -112
+  - name: offset_keep_y
+    description: "Y offset of overlay 1 of the stone keep (BuildingType 41)."
+    address: 0x4E4FD3
+    size: 4
+    default: -143
+    value: -301
+  - name: offset_closed_tower4_x
+    description: "X offset of overlay 4 of tower four (BuildingType 77)."
+    address: 0x4E5417
+    size: 1
+    default: -77
+    value: -121
+  - name: offset_closed_tower4_y
+    description: "Y offset of overlay 4 of tower four (BuildingType 77)."
+    address: 0x4E5410
+    size: 4
+    default: -315
+    value: -389
+  - name: offset_closed_tower0_x
+    description: "X offset of overlay 2 of tower one (BuildingType 74)."
+    address: 0x4E52A6
+    size: 1
+    default: -34
+    value: -42
+  - name: offset_closed_tower0_y
+    description: "Y offset of overlay 2 of tower one (BuildingType 74)."
+    address: 0x4E529F
+    size: 4
+    default: -379
+    value: -468
+  - name: offset_tower0_x
+    description: "X offset of overlay 1 of tower one (BuildingType 74)."
+    address: 0x4E5280
+    size: 1
+    default: -33
+    value: -32
+  - name: offset_tower0_y
+    description: "Y offset of overlay 1 of tower one (BuildingType 74)."
+    address: 0x4E5279
+    size: 4
+    default: -320
+    value: -348
+  - name: offset_biggate_door_Left_x
+    description: "X offset of overlay 1 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5027
+    size: 1
+    default: -7
+    value: -92
+  - name: offset_biggate_door_Left_y
+    description: "Y offset of overlay 1 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5020
+    size: 4
+    default: -193
+    value: -243
+  - name: offset_biggate_door_right_x
+    description: "X offset of overlay 2 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5049
+    size: 1
+    default: -96
+    value: -92
+  - name: offset_biggate_door_right_y
+    description: "Y offset of overlay 2 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5042
+    size: 4
+    default: -193
+    value: -243
+  - name: offset_biggate_overlay3_x
+    description: "X offset of overlay 3 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5068
+    size: 1
+    default: 3
+    value: 3
+  - name: offset_biggate_overlay3_y
+    description: "Y offset of overlay 3 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5064
+    size: 1
+    default: -91
+    value: -91
+  - name: offset_biggate_overlay4_x
+    description: "X offset of overlay 4 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5087
+    size: 1
+    default: -51
+    value: -51
+  - name: offset_biggate_overlay4_y
+    description: "Y offset of overlay 4 of the large gatehouse (BuildingType 45)."
+    address: 0x4E5083
+    size: 1
+    default: -91
+    value: -91
+  - name: offset_smallgate_overlay1_x
+    description: "X offset of overlay 1 of the small gatehouse (BuildingType 46)."
+    address: 0x4E50EC
+    size: 1
+    default: 5
+    value: 5
+  - name: offset_smallgate_overlay1_y
+    description: "Y offset of overlay 1 of the small gatehouse (BuildingType 46)."
+    address: 0x4E50E5
+    size: 4
+    default: -178
+    value: -178
+  - name: offset_smallgate_overlay2_x
+    description: "X offset of overlay 2 of the small gatehouse (BuildingType 46)."
+    address: 0x4E510E
+    size: 1
+    default: -64
+    value: -64
+  - name: offset_smallgate_overlay2_y
+    description: "Y offset of overlay 2 of the small gatehouse (BuildingType 46)."
+    address: 0x4E5107
+    size: 4
+    default: -177
+    value: -177
+  - name: offset_smallgate_overlay3_x
+    description: "X offset of overlay 3 of the small gatehouse (BuildingType 46)."
+    address: 0x4E512D
+    size: 1
+    default: -13
+    value: -13
+  - name: offset_smallgate_overlay3_y
+    description: "Y offset of overlay 3 of the small gatehouse (BuildingType 46)."
+    address: 0x4E5129
+    size: 1
+    default: -83
+    value: -83
+  - name: offset_smallgate_overlay4_x
+    description: "X offset of overlay 4 of the small gatehouse (BuildingType 46)."
+    address: 0x4E514C
+    size: 1
+    default: -35
+    value: -35
+  - name: offset_smallgate_overlay4_y
+    description: "Y offset of overlay 4 of the small gatehouse (BuildingType 46)."
+    address: 0x4E5148
+    size: 1
+    default: -83
+    value: -83
+
+  # --------------------------------------------------------------------------------------
+  # Diagonal wall overlays
+  # Where a wall runs diagonally, the game fills the corners between its tiles with one of
+  # four anim_castle.gm1 frames, 46 to 49 as the game counts them (45 to 48 counting from 0).
+  # Which frame a tile gets depends on the direction of the diagonal and on the camera
+  # rotation. ViewportRenderState::renderMap draws them with the fixed offsets below; the
+  # other axis of each has no offset in the code, so it cannot be changed with a value.
+  # Each offset applies to every tile carrying that overlay, not to a single frame.
+  # --------------------------------------------------------------------------------------
+  - name: offset_wall_diagonal_frame46_y
+    description: "Y offset of the diagonal wall overlay using frame 46 (tile flag 0x200)."
+    address: 0x4E9E21
+    size: 1
+    default: -1
+    value: -1
+  - name: offset_wall_diagonal_frame47_y
+    description: "Y offset of the diagonal wall overlay using frame 47 (tile flag 0x40)."
+    address: 0x4E9D93
+    size: 1
+    default: 7
+    value: 7
+  - name: offset_wall_diagonal_frame48_x
+    description: "X offset of the diagonal wall overlay using frame 48 (tile flag 0x100)."
+    address: 0x4E9E0A
+    size: 1
+    default: 16
+    value: 16
+  - name: offset_wall_diagonal_frame49_y
+    description: "Y offset of the diagonal wall overlay using frame 49 (tile flag 0x80). A second pass gives neighbouring tiles on the same diagonal other frames through the same flag, so this moves those pieces too."
+    address: 0x4E9DDB
+    size: 1
+    default: 98
+    value: 98
+
+  # --------------------------------------------------------------------------------------
+  # Misc
+  # --------------------------------------------------------------------------------------
+  - name: minimap_unit_size
+    description: "Minimap unit size."
+    address: 0x4B6E50
+    size: 1
+    default: 1
+    value: 1
+  - name: increase_memory
+    description: "Size in bytes of the texture rendering buffer the game allocates at startup."
+    address: 0x59C9A8
+    size: 4
+    default: 68100000
+    value: 100000000
+
+  # --------------------------------------------------------------------------------------
+  # Unit stances
+  # --------------------------------------------------------------------------------------
+  - name: defensive_stance_range
+    description: "Defensive stance range * 8."
+    address: 0x54A887
+    size: 4
+    default: 40
+    value: 110
+  - name: aggressive_stance_range
+    description: "Aggressive stance range * 8."
+    address: 0x54A87D
+    size: 4
+    default: 200
+    value: 80
+  - name: aggressive_stance_melee_building_target_range
+    description: "Aggressive stance melee units building targeting range."
+    address: 0x52AC44
+    size: 1
+    default: 15
+    value: 15
+  - name: stance_max_units_per_enemy
+    description: "Max. number of defensive/aggressive stance units allowed to go after the same enemy."
+    address: 0x54AC24
+    size: 2
+    default: 3
+    value: 5
+
+  # --------------------------------------------------------------------------------------
+  # Castle build range
+  # How far from the keep castle parts may be built.
+  # --------------------------------------------------------------------------------------
+  - name: build_range_160
+    description: "160x160 map build range."
+    address: 0x4FBC52
+    size: 4
+    default: 45
+    value: 70
+  - name: build_range_200
+    description: "200x200 map build range."
+    address: 0x4FBC58
+    size: 4
+    default: 50
+    value: 70
+  - name: build_range_300
+    description: "300x300 map build range."
+    address: 0x4FBC5E
+    size: 4
+    default: 60
+    value: 70
+  - name: build_range_400
+    description: "400x400 map build range. Also used for any other map size."
+    address: 0x4FBC64
+    size: 4
+    default: 70
+    value: 70
+
+  # --------------------------------------------------------------------------------------
+  # Building denial - player AND AI
+  # The AI places all of its buildings, farms and siege tents through these same checks
+  # (TileMapState::placeBuilding -> checkBuildingCanBePlacedHere / setTerrain), so these are
+  # the AI build denial ranges as well as the player's. The game has no separate AI copy.
+  # --------------------------------------------------------------------------------------
+  - name: denial_units_normal_buildings
+    description: "[player + AI] Range around enemy units for ordinary buildings (houses, workshops, barracks, market, church, keep and the like) in 1-player game modes. Other game modes use this value plus the offset below. Was: Building denial range around units, offset dependant."
+    address: 0x503CA1
+    size: 1
+    default: 30
+    value: 30
+  - name: denial_units_normal_buildings_offset_multiplayer
+    description: "[player + AI] Added to the value above in skirmish, Crusader trail and multiplayer: 30 + (-15) = 15. Was: Building denial range around units, offset for non-1-player gamemodes."
+    address: 0x503C9E
+    size: 1
+    default: -15
+    value: -15
+  - name: denial_units_castle_parts
+    description: "[player + AI] Range around enemy units for towers, gatehouses, gates, moat, killing pits, pitch ditches, drawbridges and dog cages, outside 1-player game modes. Was: Building denial range around units 3."
+    address: 0x503A52
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_castle_parts
+    description: "[player + AI] Range around enemy buildings for the same castle parts, outside 1-player game modes. Was: Building denial range around buildings 3."
+    address: 0x503A5A
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_castle_parts_1player
+    description: "[player + AI] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 3."
+    address: 0x503A61
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_units_storage
+    description: "[player + AI] Range around enemy units for stockpile, granary and armoury, outside 1-player game modes (1-player modes do not check). Was: Building denial range around units for storage buildings in non-1-player gamemodes."
+    address: 0x5039B0
+    size: 1
+    default: 3
+    value: 15
+  - name: denial_units_siege_engines
+    description: "[player + AI] Range around enemy units for siege tents (catapult, trebuchet, siege tower, ram, shield). Was: Building denial range around units for siege tents."
+    address: 0x503C51
+    size: 1
+    default: 3
+    value: 7
+  - name: denial_units_farms_keep
+    description: "[player + AI] Range around enemy units when farms, the keep and killing pits lay down their ground, outside 1-player game modes. Was: Building denial range around units 5."
+    address: 0x512971
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_farms_keep
+    description: "[player + AI] Range around enemy buildings for the same, outside 1-player game modes. Was: Building denial range around buildings 5."
+    address: 0x512978
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_farms_keep_1player
+    description: "[player + AI] Range around enemy units for the same, in 1-player game modes. Was: Building denial range around units in 1-player gamemodes."
+    address: 0x512981
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_buildings_farms_keep_1player
+    description: "[player + AI] Range around enemy buildings for the same, in 1-player game modes. Was: Building denial range around buildings in 1-player gamemodes."
+    address: 0x512988
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_buildings_castle_parts_map_editor
+    description: "[map editor] Range around enemy buildings for castle parts in the map editor. Was: Building denial range around buildings, scenario editor 2."
+    address: 0x503BD4
+    size: 1
+    default: 7
+    value: 7
+
+  # --------------------------------------------------------------------------------------
+  # Building denial - AI only
+  # The only AI-exclusive build denial range: the AI builds walls tile by tile through
+  # TileMapState::placeDefensiveStructureTile, which the player never uses.
+  # --------------------------------------------------------------------------------------
+  - name: ai_denial_units_walls
+    description: "[AI only] Range around enemy units in which the AI cannot place wall, crenel and stair tiles. Same value in every game mode. Was: Building denial range around units, unknown special case."
+    address: 0x4F950B
+    size: 1
+    default: 5
+    value: 7
+
+  # --------------------------------------------------------------------------------------
+  # Building denial - player only
+  # Build cursor checks, walls the player drags, the delete tool and the repair button.
+  # --------------------------------------------------------------------------------------
+  - name: denial_units_castle_site
+    description: "[player] Range around enemy units, castle site check of the build cursor, outside 1-player game modes. Was: Building denial range around units 1."
+    address: 0x50252C
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_castle_site
+    description: "[player] Range around enemy buildings for the same. Was: Building denial range around buildings 1."
+    address: 0x502534
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_castle_site_1player
+    description: "[player] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 1."
+    address: 0x50253B
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_units_player_walls
+    description: "[player] Range around enemy units for walls the player drags, outside 1-player game modes. Was: Building denial range around units 2."
+    address: 0x5029F2
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_player_walls
+    description: "[player] Range around enemy buildings for the same. Was: Building denial range around buildings 2."
+    address: 0x5029FA
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_player_walls_1player
+    description: "[player] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 2."
+    address: 0x502A01
+    size: 4
+    default: 30
+    value: 30
+  - name: denial_buildings_player_walls_map_editor
+    description: "[map editor] Range around enemy buildings for walls in the map editor. Was: Building denial range around buildings, scenario editor 1."
+    address: 0x502CD4
+    size: 1
+    default: 7
+    value: 7
+  - name: denial_units_placement_preview
+    description: "[player] Range around enemy units for the red/green placement preview, outside 1-player game modes. Was: Building denial range around units 4."
+    address: 0x508B3F
+    size: 4
+    default: 15
+    value: 15
+  - name: denial_buildings_placement_preview
+    description: "[player] Range around enemy buildings for the same. Was: Building denial range around buildings 4."
+    address: 0x508B47
+    size: 4
+    default: 7
+    value: 7
+  - name: denial_units_buildings_placement_preview_1player
+    description: "[player] Both ranges above, in 1-player game modes. Was: Building denial range around units and buildings in 1-player gamemodes 4."
+    address: 0x508B4E
+    size: 4
+    default: 30
+    value: 30
+  - name: delete_tool_denial_units
+    description: "[player] Delete tool: range around enemy units in 1-player game modes. Was: Delete tool denial range around units 1."
+    address: 0x43884E
+    size: 1
+    default: 30
+    value: 30
+  - name: delete_tool_denial_units_offset_multiplayer
+    description: "[player] Delete tool: added to the value above outside 1-player game modes. Was: Delete tool denial range around units, offset for non-1-player gamemodes 1."
+    address: 0x43884B
+    size: 1
+    default: -15
+    value: -15
+  - name: delete_cursor_denial_units
+    description: "[player] Delete cursor check: range around enemy units in 1-player game modes. Was: Delete tool denial range around units 2."
+    address: 0x504B13
+    size: 1
+    default: 30
+    value: 30
+  - name: delete_cursor_denial_units_offset_multiplayer
+    description: "[player] Delete cursor check: added to the value above outside 1-player game modes. Was: Delete tool denial range around units, offset for non-1-player gamemodes 2."
+    address: 0x504B0B
+    size: 1
+    default: -15
+    value: -15
+  - name: repair_denial_units
+    description: "[player] Tower/gate repair: range around enemy units in 1-player game modes. Was: Tower/gate repair denial range around units 1."
+    address: 0x4661A3
+    size: 1
+    default: 30
+    value: 30
+  - name: repair_denial_units_offset_multiplayer
+    description: "[player] Tower/gate repair: added to the value above outside 1-player game modes. Was: Tower/gate repair denial range around units, offset for non-1-player gamemodes 1."
+    address: 0x4661A0
+    size: 1
+    default: -15
+    value: -15
+  - name: repair_button_denial_units
+    description: "[player] Repair button enabled check: range around enemy units in 1-player game modes. Was: Tower/gate repair denial range around units 2."
+    address: 0x46637E
+    size: 1
+    default: 30
+    value: 30
+  - name: repair_button_denial_units_offset_multiplayer
+    description: "[player] Repair button enabled check: added to the value above outside 1-player game modes. Was: Tower/gate repair denial range around units, offset for non-1-player gamemodes 2."
+    address: 0x46637B
+    size: 1
+    default: -15
+    value: -15

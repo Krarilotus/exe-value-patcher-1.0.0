@@ -1,0 +1,4 @@
+config_file: Файл настройки значений
+config_file_tooltip: Выберите YAML-файл значений Crusader и Extreme для применения при запуске.
+config_group: Значения программы
+misc: Miscellaneous

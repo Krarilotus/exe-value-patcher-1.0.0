@@ -5,14 +5,14 @@
   way an exe patcher would, but in memory at startup so the exe on disk stays untouched.
 
   The config has one list per game version ("extreme" and "vanilla"); only the list for the
-  running exe is applied. See config.yml for the entry format.
+  running exe is applied. See values.yml for the entry format.
 
   UCP runs module code from the exe's entry point, before the game's static constructors,
   so values those constructors use (such as the texture buffer size) still take effect.
 ]]
 
 local MODULE_NAME = "exe-value-patcher"
-local DEFAULT_CONFIG_PATH = "ucp/modules/exe-value-patcher-*/config.yml"
+local DEFAULT_CONFIG_PATH = "ucp/modules/exe-value-patcher-*/values.yml"
 
 local IMAGE_BASE = 0x400000
 local FIRST_SECTION_ADDRESS = 0x401000
@@ -199,6 +199,11 @@ namespace.enable = function(self, config)
     path = DEFAULT_CONFIG_PATH
   end
 
+  -- Old built-in paths referred to the value payload, not UCP's config.yml.
+  -- Keep external/custom file selections untouched.
+  if path:match("^ucp/modules/exe%-value%-patcher[^/]*/config%.yml$") then
+    path = path:gsub("/config%.yml$", "/values.yml")
+  end
   local settings, loadError = loadConfig(path)
   if settings == nil then
     log(ERROR, string.format("[%s] %s. Nothing was changed.", MODULE_NAME, loadError))
