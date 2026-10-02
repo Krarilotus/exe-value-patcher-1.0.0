@@ -1,0 +1,7 @@
+name: exe-value-patcher
+display-name: Exe Value Patcher
+type: module
+version: 1.0.0
+author: Monsterfish
+meta:
+  version: 1.0.0

@@ -1,0 +1,19 @@
+meta:
+  version: 1.0.0
+options:
+- display: GroupBox
+  category: [Exe Value Patcher]
+  header: '{{config_group}}'
+  text: '{{config_group_descr}}'
+  hasHeader: true
+  children:
+  - url: exe-value-patcher.config_file
+    name: exe-value-patcher-config-file
+    text: '{{config_file}}'
+    tooltip: '{{config_file_tooltip}}'
+    display: FileInput
+    contents:
+      type: string
+      generalizeExtensionPaths: true
+      filter: files
+      value: 'ucp/modules/exe-value-patcher-*/config.yml'
